@@ -1,5 +1,5 @@
 class Tile
-  attr_reader :flagged, :revealed
+  attr_reader
 
   def initialize(revealed = false, bombed = false, flagged = false)
     @revealed = revealed
@@ -25,6 +25,14 @@ class Tile
 
   def bombed?
     @bombed
+  end
+
+  def flagged?
+    @flagged
+  end
+
+  def revealed?
+    @revealed
   end
 
 end

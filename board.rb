@@ -6,7 +6,9 @@ class Board
   def self.random_board(size = 8, bombs = 10)
     grid = Array.new(size) { Array.new(size) }
 
-    Board.new(grid, bombs).populate
+    board = Board.new(grid, bombs)
+    board.populate
+    board
   end
 
   def initialize(grid, bombs)
@@ -21,6 +23,24 @@ class Board
       end
     end
     place_bombs
+  end
+
+  def over?
+    false
+  end
+
+  def length
+    @grid.length
+  end
+
+  def [](pos)
+    x, y = pos
+    @grid[x][y]
+  end
+
+  def []=(pos, val)
+    x, y = pos
+    @grid[x][y] = val
   end
 
   private
@@ -40,16 +60,4 @@ class Board
     end
   end
 
-  def [](pos)
-    x, y = pos
-    @grid[x][y]
-  end
-
-  def []=(pos, val)
-    x, y = pos
-    @grid[x][y] = val
-  end
-
 end
-
-a = Board.random_board
