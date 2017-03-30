@@ -9,6 +9,7 @@ class Game
   end
 
   def play_turn
+    @board.render
     pos = get_pos
     action = get_action
     return if illegal_flag?(pos, action)

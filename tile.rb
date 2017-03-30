@@ -1,10 +1,12 @@
 class Tile
-  attr_reader
+  attr_reader :revealed, :bombs_around
+  attr_accessor :neighbor_bomb_count
 
   def initialize(revealed = false, bombed = false, flagged = false)
     @revealed = revealed
     @bombed = bombed
     @flagged = flagged
+    @neighbor_bomb_count = nil
   end
 
   def place_bomb
@@ -33,6 +35,14 @@ class Tile
 
   def revealed?
     @revealed
+  end
+
+  def to_s
+    if revealed
+      bombed? ? "*" : neighbor_bomb_count
+    else
+      flagged? ? "F" : " "
+    end
   end
 
 end

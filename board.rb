@@ -8,12 +8,48 @@ class Board
 
     board = Board.new(grid, bombs)
     board.populate
+    board.neighbor_bomb_count
     board
   end
 
   def initialize(grid, bombs)
     @grid = grid
     @bombs = bombs
+  end
+
+  def render
+    puts "bombs left: #{bombs_left}"
+    puts "   #{(0...10).to_a.join(" ")}"
+    @grid.each_with_index do |row, i|
+      puts "#{i}  #{row.map(&:to_s).join(" ")}"
+    end
+  end
+
+  def neighbor_bomb_count
+    @grid.each_with_index do |row, i|
+      row.each_index do |j|
+        bombs = neighbors([i, j]).count(&:bombed?)
+        self[[i, j]].neighbor_bomb_count = bombs
+      end
+    end
+  end
+
+  def neighbors(pos)
+    neighbors = []
+    idx = [-1, 0, 1]
+    idx.each do |i|
+      curr_row = i + pos[0]
+      idx.each do |j|
+        curr_col = j + pos[1]
+        curr_pos = [curr_row, curr_col]
+        neighbors << self[curr_pos] if valid_pos?(curr_pos)
+      end
+    end
+    neighbors
+  end
+
+  def valid_pos?(pos)
+    pos.all? { |n| n.between?(0, grid.length - 1) }
   end
 
   def populate
