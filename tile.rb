@@ -39,10 +39,14 @@ class Tile
 
   def to_s
     if revealed
-      bombed? ? "*" : neighbor_bomb_count
+      bombed? ? "*" : revealed_tile_display
     else
       flagged? ? "F" : " "
     end
+  end
+
+  def revealed_tile_display
+    @neighbor_bomb_count == 0 ? "_" : @neighbor_bomb_count
   end
 
 end
