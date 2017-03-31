@@ -15,7 +15,7 @@ class Game
     return if illegal_flag?(pos, action)
 
     if action == "r"
-      @board[pos].reveal
+      @board.reveal(pos)
       @board[pos].unflag
     elsif action == "f"
       @board[pos].flagged? ? @board[pos].unflag : @board[pos].flag
@@ -83,13 +83,13 @@ class Game
   end
 
   def run
-    #debugger
     play_turn until @board.over?
+    @board.render
     print_outcome
   end
 
   def print_outcome
-    if @board.won?
+    unless @board.lose?
       puts "Congratulations, you won!"
     else
       puts "Game Over :("

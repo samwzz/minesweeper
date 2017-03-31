@@ -18,11 +18,21 @@ class Board
   end
 
   def render
-    puts "bombs left: #{bombs_left}"
-    puts "   #{(0...10).to_a.join(" ")}"
+    puts "bombs left: #{bombs - flag_count}"
+    puts "   #{(0...@grid.length).to_a.join(" ")}"
     @grid.each_with_index do |row, i|
       puts "#{i}  #{row.map(&:to_s).join(" ")}"
     end
+  end
+
+  def [](pos)
+    x, y = pos
+    @grid[x][y]
+  end
+
+  def []=(pos, val)
+    x, y = pos
+    @grid[x][y] = val
   end
 
   def neighbor_bomb_count
@@ -62,26 +72,50 @@ class Board
   end
 
   def over?
-    false
+    lose? || all_revealed_or_bombed?
+  end
+
+  def lose?
+    @grid.flatten.any? { |tile| tile.bombed? && tile.revealed? }
+  end
+
+  def all_revealed_or_bombed?
+    @grid.flatten.all? { |tile| tile.revealed? || tile.bombed? }
+  end
+
+  def flag_count
+    @grid.flatten.count { |tile| tile.flagged? }
+  end
+
+  def reveal(pos)
+
+    tile = self[pos]
+    return if tile.revealed?
+    tile.reveal
+    return if tile.neighbor_bomb_count > 0
+
+    cascade(pos)
+  end
+
+  def cascade(pos)
+    idx = [-1, 0, 1]
+    idx.each do |i|
+      curr_row = i + pos[0]
+      idx.each do |j|
+        curr_col = j + pos[1]
+        curr_pos = [curr_row, curr_col]
+        reveal(curr_pos) if valid_pos?(curr_pos)
+      end
+    end
   end
 
   def length
     @grid.length
   end
 
-  def [](pos)
-    x, y = pos
-    @grid[x][y]
-  end
-
-  def []=(pos, val)
-    x, y = pos
-    @grid[x][y] = val
-  end
-
   private
 
-  attr_reader :grid, :bombs, :bombs_left
+  attr_reader :grid, :bombs
 
   def place_bombs
     bombs.times do
