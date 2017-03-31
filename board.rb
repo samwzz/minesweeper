@@ -18,6 +18,7 @@ class Board
   end
 
   def render
+    system("clear")
     puts "bombs left: #{bombs - flag_count}"
     puts "   #{(0...@grid.length).to_a.join(" ")}"
     @grid.each_with_index do |row, i|
@@ -106,6 +107,8 @@ class Board
         curr_pos = [curr_row, curr_col]
         reveal(curr_pos) if valid_pos?(curr_pos)
       end
+      render
+      sleep(0.25)
     end
   end
 

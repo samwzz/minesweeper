@@ -1,3 +1,5 @@
+require 'colorize'
+
 class Tile
   attr_reader :revealed, :bombs_around
   attr_accessor :neighbor_bomb_count
@@ -39,14 +41,14 @@ class Tile
 
   def to_s
     if revealed
-      bombed? ? "*" : revealed_tile_display
+      bombed? ? "*".colorize(:red) : revealed_tile_display
     else
-      flagged? ? "F" : " "
+      flagged? ? "F".colorize(:green) : " "
     end
   end
 
   def revealed_tile_display
-    @neighbor_bomb_count == 0 ? "_" : @neighbor_bomb_count
+    @neighbor_bomb_count == 0 ? "_" : @neighbor_bomb_count.to_s.colorize(:blue)
   end
 
 end
